@@ -1,0 +1,20 @@
+{
+  "name": "gulp-test",
+  "version": "0.1.0",
+  "description": "Gulp test tutorial.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulp",
+    "tutorial",
+    "js",
+    "scss"
+  ],
+  "author": "Israel Martins",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "gulp": "^5.0.0"
+  }
+}
