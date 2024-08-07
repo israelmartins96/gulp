@@ -15,6 +15,9 @@
   "author": "Israel Martins",
   "license": "GPL-3.0",
   "devDependencies": {
-    "gulp": "^5.0.0"
+    "gulp": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.77.8"
   }
 }
