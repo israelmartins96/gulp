@@ -1,26 +1,28 @@
 /**
- * Include Gulp.
+ * Modules.
  */
-const gulp = require( 'gulp' );
+// Load Gulp.
+import gulp from 'gulp';
+
+// Include Gulp Rename module for modifying file name.
+import rename from 'gulp-rename';
+
+// Include modules for Sass CSS compiler.
+import * as dartSass from 'sass';
+import gulpSassModule from 'gulp-sass';
+
+const gulpSass = gulpSassModule( dartSass );
+
+// Include Gulp Autoprefixer module for adding CSS vendor prefixes.
+import autoprefixer from 'gulp-autoprefixer';
 
 /**
- * Include Gulp Rename module for modifying file name.
+ * Stylesheets.
  */
-const gulpRename = require( 'gulp-rename' );
-
-/**
- * Include module for Sass CSS compiler.
- */
-const gulpSass = require( 'gulp-sass' ) ( require( 'sass' ) );
-
-/**
- * Sass source file.
- */
+// Sass source file.
 const styleSrc = './src/scss/style.scss';
 
-/**
- * Stylesheet directory.
- */
+// Stylesheet directory.
 const styleDistDir = './dist/css/';
 
 /**
@@ -35,8 +37,13 @@ const loadStyle = async () => {
     } ) )
     // Log errors in the console if any during the CSS rendering.
     .on( 'error', console.error.bind( console ) )
+    // Add browser vendor CSS prefixes.
+    .pipe( autoprefixer( {
+        cascade: false
+    } ) )
     // Add the ".min" suffix to the file name.
-    .pipe( gulpRename( { suffix: '.min' } ) )
+    .pipe( rename( { suffix: '.min' } ) )
+    // Render the CSS file in the CSS directory.
     .pipe( gulp.dest( styleDistDir ) );
 };
 
