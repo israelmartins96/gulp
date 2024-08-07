@@ -29,7 +29,7 @@ const styleDistDir = './dist/css/';
  * Compiles stylesheet.
  */
 const loadStyle = async () => {
-    gulp.src( styleSrc )
+    gulp.src( styleSrc, { sourcemaps: true } )
     // Render CSS in minified form.
     .pipe( gulpSass( {
         errorLogToConsole: true,
@@ -43,8 +43,8 @@ const loadStyle = async () => {
     } ) )
     // Add the ".min" suffix to the file name.
     .pipe( rename( { suffix: '.min' } ) )
-    // Render the CSS file in the CSS directory.
-    .pipe( gulp.dest( styleDistDir ) );
+    // Render the CSS file in the CSS directory. Sourcemaps.
+    .pipe( gulp.dest( styleDistDir, { sourcemaps: '.' } ) );
 };
 
 /**
