@@ -1,4 +1,8 @@
 /**
+ * Using Gulp 5.
+ */
+
+/**
  * Modules.
  */
 // Load Gulp.
@@ -17,16 +21,46 @@ const gulpSass = gulpSassModule( dartSass );
 import autoprefixer from 'gulp-autoprefixer';
 
 /**
- * Stylesheets.
+ * Stylesheets and JavaScript sources and destinations.
  */
 // Sass source file.
-const styleSrc = './src/scss/style.scss';
+const styleSrc = 'src/scss/style.scss';
 
-// Stylesheet directory.
-const styleDistDir = './dist/css/';
+// Destination stylesheet directory.
+const styleDestination = './dist/css/';
+
+// Style location to watch.
+const styleWatch = 'src/scss/**/*.scss';
+
+// Script location to watch.
+const scriptWatch = 'src/js/**/*.js';
+
+// Script source file.
+const scriptSrc = 'src/js/script.js';
+
+// Destination JavaScript directory.
+const javaScriptDestination = './dist/js/';
 
 /**
- * Compiles stylesheet.
+ * Tasks list.
+ */
+const tasksList = {
+    default: 'default',
+    style: 'style',
+    js: 'js',
+    watch: 'watch'
+};
+
+/**
+ * Default tasks.
+ */
+const defaultTasks = [
+    tasksList.style,
+    tasksList.js
+];
+
+/**
+ * Compiles stylesheet with sourcemap enabled.
  */
 const loadStyle = async () => {
     gulp.src( styleSrc, { sourcemaps: true } )
@@ -43,11 +77,45 @@ const loadStyle = async () => {
     } ) )
     // Add the ".min" suffix to the file name.
     .pipe( rename( { suffix: '.min' } ) )
-    // Render the CSS file in the CSS directory. Sourcemaps.
-    .pipe( gulp.dest( styleDistDir, { sourcemaps: '.' } ) );
+    // Render the CSS file in the CSS directory with external sourcemaps.
+    .pipe( gulp.dest( styleDestination, { sourcemaps: '.' } ) );
 };
 
 /**
- * Create task to compile stylesheet.
+ * Compiles JavaScript.
  */
-gulp.task( 'style', loadStyle );
+const loadJavaScript = async () => {
+    gulp.src( scriptSrc )
+    // Render the JavaScript file in the destination directory.
+    .pipe( gulp.dest( javaScriptDestination ) );
+};
+
+/**
+ * Watches for specified tasks.
+ */
+const doWatch = () => {
+    // Watch for style update.
+    gulp.watch( styleWatch, loadStyle );
+    // Watch for script update.
+    gulp.watch( scriptWatch, loadJavaScript );
+};
+
+/**
+ * Task to compile stylesheet.
+ */
+gulp.task( tasksList.style, loadStyle );
+
+/**
+ * Task to compile JavaScript.
+ */
+gulp.task( tasksList.js, loadJavaScript );
+
+/**
+ * Task to run default tasks.
+ */
+gulp.task( tasksList.default, gulp.parallel( defaultTasks ) );
+
+/**
+ * Task to watch for file changes.
+ */
+gulp.task( tasksList.watch, doWatch );
