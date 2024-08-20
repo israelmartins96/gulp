@@ -5,41 +5,67 @@
 /**
  * Modules.
  */
-// Load Gulp.
-import gulp from 'gulp';
+// Gulp.
+import gulp, { watch } from 'gulp';
 
-// Include Gulp Rename module for modifying file name.
+// Gulp Rename for modifying file name.
 import rename from 'gulp-rename';
 
-// Include modules for Sass CSS compiler.
+// Sass CSS compiler.
 import * as dartSass from 'sass';
 import gulpSassModule from 'gulp-sass';
 
 const gulpSass = gulpSassModule( dartSass );
 
-// Include Gulp Autoprefixer module for adding CSS vendor prefixes.
+// Gulp Autoprefixer for adding CSS vendor prefixes.
 import autoprefixer from 'gulp-autoprefixer';
 
+// Gulp Uglify.
+import uglify from 'gulp-uglify';
+
+// Gulp Sourcemaps.
+import * as sourcemaps from 'gulp-sourcemaps';
+
+// Browserify.
+import browserify from 'browserify';
+
+// Babelify.
+import babelify from 'babelify';
+
+// Vinyl Source Stream.
+import source from 'vinyl-source-stream';
+
+// Vinyl Buffer.
+import buffer from 'vinyl-buffer';
+
 /**
- * Stylesheets and JavaScript sources and destinations.
+ * Stylesheets and scripts sources and destinations.
  */
-// Sass source file.
-const styleSrc = 'src/scss/style.scss';
-
-// Destination stylesheet directory.
-const styleDestination = './dist/css/';
-
-// Style location to watch.
-const styleWatch = 'src/scss/**/*.scss';
-
-// Script location to watch.
-const scriptWatch = 'src/js/**/*.js';
-
-// Script source file.
-const scriptSrc = 'src/js/script.js';
-
-// Destination JavaScript directory.
-const javaScriptDestination = './dist/js/';
+const paths = {
+    current: '.',
+    styles: {
+        src: {
+            main: 'src/scss/style.scss',
+            dir: 'src/scss/',
+            files: [
+                'style.scss'
+            ]
+        },
+        dest: './dist/css/',
+        watch: 'src/scss/**/*.scss'
+    },
+    scripts: {
+        src: {
+            main: 'src/js/script.js',
+            dir: 'src/js/',
+            files: [
+                'script.js'
+            ]
+        },
+        dest: './dist/js/',
+        watch: 'src/js/**/*.js'
+    }
+};
 
 /**
  * Tasks list.
@@ -54,16 +80,17 @@ const tasksList = {
 /**
  * Default tasks.
  */
-const defaultTasks = [
+const tasksDefault = [
     tasksList.style,
-    tasksList.js
+    tasksList.js,
+    tasksList.watch
 ];
 
 /**
  * Compiles stylesheet with sourcemap enabled.
  */
 const loadStyle = async () => {
-    gulp.src( styleSrc, { sourcemaps: true } )
+    gulp.src( paths.styles.src.main, { sourcemaps: true } )
     // Render CSS in minified form.
     .pipe( gulpSass( {
         errorLogToConsole: true,
@@ -78,16 +105,40 @@ const loadStyle = async () => {
     // Add the ".min" suffix to the file name.
     .pipe( rename( { suffix: '.min' } ) )
     // Render the CSS file in the CSS directory with external sourcemaps.
-    .pipe( gulp.dest( styleDestination, { sourcemaps: '.' } ) );
+    .pipe( gulp.dest( paths.styles.dest, { sourcemaps: '.' } ) );
+};
+
+/**
+ * Maps scripts.
+ */
+const mapScripts = entryScript => {
+    // Browserify.
+    return browserify()
+        // Transform babelify.
+        .transform( babelify )
+        // Make source file available.
+        .require( paths.scripts.src.main, { entry: true } )
+        // Bundle.
+        .bundle()
+        // Check source.
+        .pipe( source( entryScript ) )
+        // Add ".min" file name suffix.
+        .pipe( rename( { extname: '.min.js' } ) )
+        // Buffer.
+        .pipe( buffer() )
+        // Sourcemap.
+        .pipe( sourcemaps.init( { loadMaps: true } ) )
+        // Uglify.
+        .pipe( uglify() )
+        // Render the JavaScript file in the directory with external sourcemaps.
+        .pipe( gulp.dest( paths.scripts.dest, { sourcemaps: '.' } ) );
 };
 
 /**
  * Compiles JavaScript.
  */
 const loadJavaScript = async () => {
-    gulp.src( scriptSrc )
-    // Render the JavaScript file in the destination directory.
-    .pipe( gulp.dest( javaScriptDestination ) );
+    paths.scripts.src.files.map( mapScripts );
 };
 
 /**
@@ -95,9 +146,9 @@ const loadJavaScript = async () => {
  */
 const doWatch = () => {
     // Watch for style update.
-    gulp.watch( styleWatch, loadStyle );
+    gulp.watch( paths.styles.watch, loadStyle );
     // Watch for script update.
-    gulp.watch( scriptWatch, loadJavaScript );
+    gulp.watch( paths.scripts.watch, loadJavaScript );
 };
 
 /**
@@ -111,11 +162,11 @@ gulp.task( tasksList.style, loadStyle );
 gulp.task( tasksList.js, loadJavaScript );
 
 /**
- * Task to run default tasks.
- */
-gulp.task( tasksList.default, gulp.parallel( defaultTasks ) );
-
-/**
  * Task to watch for file changes.
  */
 gulp.task( tasksList.watch, doWatch );
+
+/**
+ * Task to run default tasks.
+ */
+gulp.task( tasksList.default, gulp.parallel( tasksDefault ) );

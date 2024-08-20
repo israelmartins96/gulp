@@ -1,2 +1,6 @@
-// This is a JavaScript file. Duh, you knew that already.
-console.log( 'Bonjour Gulp!' );
+/**
+ * Import App.
+ */
+import App from './modules/app';
+
+const app = new App();
