@@ -6,7 +6,7 @@
  * Modules.
  */
 // Gulp.
-import gulp, { watch } from 'gulp';
+import gulp from 'gulp';
 
 // Gulp Rename for modifying file name.
 import rename from 'gulp-rename';
