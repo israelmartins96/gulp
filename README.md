@@ -21,11 +21,13 @@ The required Babel preset is `@babel/preset-env`.
 ## Installation and Usage
 1. Fork the repository.
 2. Create a local clone of your forked repo.
-3. The files and directories location can are stored in the `paths` object. Edit to match your file/directory structure.
+3. The files and directories location are stored in the `paths` object. Edit to match your file/directory structure.
 4. Navigate to the root folder in the CLI and run `npm install` to install all the project's dependencies.
 5. Run the `gulp` command in the CLI to test the successful installation. There should be no errors if the installation is successful.
-6. All available tasks are stored in the `tasksList` object, which may be modified and referenced to run specific tasks in the CLI. E.g., `gulp js`.
+6. All available tasks are stored in the `tasksList` object, which may be modified and referenced to run specific tasks in the CLI. E.g., `gulp js`.\
+\
 An active task may be terminated with `CMD+C` or `Ctrl+C` (Windows). You most likely know that already ;)
 
 ## Credits
+- [Official Gulp repo.](https://github.com/gulpjs/gulp)
 - [Alecaddd Gulpfile setup for Javascript ES6 compiling, plus SCSS, images, and fonts handling](https://github.com/Alecaddd/gulp-es6)
