@@ -49,6 +49,7 @@ const reload = browserSync.reload;
  * Stylesheets and scripts sources and destinations.
  */
 const paths = {
+    projectURL: 'http://127.0.0.1/mysandbox/javascript/gulp/',
     current: '.',
     html: {
         watch: './**/*.html'
@@ -180,7 +181,7 @@ const doBrowserSync = () => {
     browserSync.init( {
         open: false,
         injectChanges: true,
-        proxy: 'http://127.0.0.1/mysandbox/javascript/gulp/',
+        proxy: paths.projectURL,
         watch: true
     } );
 
