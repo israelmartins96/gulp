@@ -97,7 +97,6 @@ const tasksList = {
 const tasksDefault = [
     tasksList.style,
     tasksList.js,
-    tasksList.watch,
     tasksList.browserSync
 ];
 
@@ -163,21 +162,17 @@ const loadJavaScript = async () => {
 /**
  * Watches for specified tasks.
  */
-const doWatch = () => {
+const doWatch = async () => {
     // Watch for style updates.
     gulp.watch( paths.styles.watch, loadStyle );
     // Watch for script updates.
     gulp.watch( paths.scripts.watch, loadJavaScript );
-    // Watch for HTML updates.
-    gulp.watch( paths.html.watch, reload );
-    // Watch for PHP updates.
-    gulp.watch( paths.php.watch, reload );
 };
 
 /**
  * Browser Sync.
  */
-const doBrowserSync = () => {
+const doBrowserSync = async () => {
     browserSync.init( {
         open: false,
         injectChanges: true,
@@ -186,14 +181,16 @@ const doBrowserSync = () => {
     } );
 
     /**
-     * Only use when not using the Gulp 'watch' task (i.e., when using 'browser-sync' task):
+     * Only used when not using the Gulp 'watch' task (i.e., when using 'browser-sync' task):
      */
-    // // Watch for style updates.
-    // gulp.watch( paths.styles.watch, loadStyle );
-    // // Watch for script updates.
-    // gulp.watch( paths.scripts.watch, loadJavaScript );
-    // // Watch for updates in the HTML files.
-    // gulp.watch( paths.html.watch ).on( 'change', reload );
+    // Watch for style updates.
+    gulp.watch( paths.styles.watch, loadStyle );
+    // Watch for script updates.
+    gulp.watch( paths.scripts.watch, loadJavaScript );
+    // Watch for updates in the HTML files.
+    gulp.watch( paths.html.watch ).on( 'change', reload );
+    // Watch for updates in the PHP files.
+    gulp.watch( paths.php.watch ).on( 'change', reload );
 };
 
 /**
