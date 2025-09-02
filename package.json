@@ -1,7 +1,7 @@
 {
-  "name": "gulp-test",
+  "name": "gulp-esm-dev-kit",
   "version": "0.1.0",
-  "description": "Gulp test tutorial.",
+  "description": "Automated build system using ESM-compatible Gulp 5 set-up for compiling Sass, bundling JS, watching files, and syncing browsers in real time.",
   "type": "module",
   "main": "index.js",
   "scripts": {
